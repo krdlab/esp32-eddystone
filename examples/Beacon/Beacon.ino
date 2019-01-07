@@ -9,7 +9,7 @@
 #include <eddystone.hpp>
 
 
-const std::string NAMESPACE = "AABBCCDDEEFFGGHHIIJJ";
+const std::string NAMESPACE = "AABBCCDDEEFF11223344";
 const std::string INSTANCE  = "112233445566";
 
 void setBeacon(BLEAdvertising* pAdvertising) {

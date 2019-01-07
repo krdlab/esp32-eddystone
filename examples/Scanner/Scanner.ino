@@ -14,7 +14,7 @@ const int SCAN_TIME = 30; // scanning time (sec)
 
 class AdvertisedDeviceHandler : public BLEAdvertisedDeviceCallbacks {
 private:
-  const std::string NAMESPACE = "AABBCCDDEEFFGGHHIIJJ";
+  const std::string NAMESPACE = "AABBCCDDEEFF11223344";
   const std::string INSTANCE  = "112233445566";
 public:
   void onResult(BLEAdvertisedDevice device) {
