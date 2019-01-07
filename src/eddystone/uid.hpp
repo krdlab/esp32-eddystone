@@ -30,7 +30,7 @@ public:
     EddystoneUid(const std::string& nid, const std::string& bid);
     explicit EddystoneUid(const uint8_t* payload);
 
-    static bool hasEddystoneServiceUuid(const uint8_t* payload);
+    static bool checkPayload(const uint8_t* payload);
 
     const bool has(const std::string& nid, const std::string& bid) const;
     const std::string getNamespaceId() const;

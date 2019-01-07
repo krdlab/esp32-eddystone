@@ -11,7 +11,8 @@
 #include <string>
 
 
-#define EDDYSTONE_SERVICE_UUID 0xFEAA
+#define EDDYSTONE_SERVICE_UUID      0xFEAA
+#define EDDYSTONE_FRAME_TYPE_UID    0x00
 
 EddystoneUid::EddystoneUid(const std::string& nid, const std::string& bid) {
     frame.len16bitServiceUuidPart = 0x03;   // <- 1 (data type value) + 2 (16-bit Eddystone UUID)
@@ -20,7 +21,7 @@ EddystoneUid::EddystoneUid(const std::string& nid, const std::string& bid) {
     frame.lenServiceDataPart = 0x17;        // Eddystone-UID full length (23bytes)
     frame.typeServiceData = 0x16;           // Service Data
     frame._eddystoneUuid = EDDYSTONE_SERVICE_UUID;
-    frame.frameType = 0x00;                 // UID spec
+    frame.frameType = EDDYSTONE_FRAME_TYPE_UID;
     frame.ranging = 0x00;                   // TODO: ranging data
     memset(frame.nid, 0, sizeof(frame.nid));
     memset(frame.bid, 0, sizeof(frame.bid));
@@ -35,12 +36,23 @@ EddystoneUid::EddystoneUid(const uint8_t* payload) {
     memcpy(&frame, payload + offset, sizeof(frame));
 }
 
-/* static */ bool EddystoneUid::hasEddystoneServiceUuid(const uint8_t* payload) {
+static bool hasEddystoneServiceUuid(const uint8_t* payload) {
     if (payload[3] == 0x03 && payload[4] == 0x03) {
         const uint16_t uuid = (((uint16_t)payload[6]) << 8) + (payload[5]);
         return uuid == EDDYSTONE_SERVICE_UUID;
     }
     return false;
+}
+
+static bool isFrameType(const uint8_t* payload, const uint8_t type) {
+    if (payload[7] > 3 && payload[8] == 0x16) {
+        return payload[11] == type;
+    }
+    return false;
+}
+
+/* static */ bool EddystoneUid::checkPayload(const uint8_t* payload) {
+    return hasEddystoneServiceUuid(payload) && isFrameType(payload, EDDYSTONE_FRAME_TYPE_UID);
 }
 
 static std::string _id_tolower(const std::string& src) {

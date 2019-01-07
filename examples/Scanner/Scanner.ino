@@ -19,7 +19,7 @@ private:
 public:
   void onResult(BLEAdvertisedDevice device) {
     bool found = false;
-    if (EddystoneUid::hasEddystoneServiceUuid(device.getPayload())) {
+    if (EddystoneUid::checkPayload(device.getPayload())) {
       EddystoneUid uid(device.getPayload());
       if (uid.has(NAMESPACE, INSTANCE)) {
         Serial.printf("> Target beacon found.\n");
